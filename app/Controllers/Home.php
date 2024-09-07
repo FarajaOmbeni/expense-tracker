@@ -92,7 +92,7 @@ class Home extends BaseController
         ];
 
         if (!$transactionModel->save($data)) {
-            return redirect()->to('/')->with('errors', $incomeModel->errors());
+            return redirect()->to('/')->with('errors', $transactionModel->errors());
         }
 
         return redirect()->to('/')->with('success', 'Income added successfully.');
