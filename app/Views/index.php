@@ -232,3 +232,45 @@
     <?php endif; ?>
     </div>
 </div>
+
+<div>
+    <h2>Balance: <?= $balance ?></h2>
+    <h3>Total Income: <?= $totalIncome ?></h3>
+    <h3>Total Expenses: <?= $totalExpenses ?></h3>
+</div>
+<canvas id="expenseIncomeChart"></canvas>
+
+<script>
+    const ctx = document.getElementById('expenseIncomeChart').getContext('2d');
+    const expenseIncomeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Income', 'Expenses'],
+            datasets: [{
+                label: 'Income vs Expenses',
+                data: [<?= $totalIncome ? $totalIncome : 0 ?>, <?= $totalExpenses ? $totalExpenses : 0 ?>],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: 'Income vs Expenses'
+                }
+            }
+        }
+    });
+</script>

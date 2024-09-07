@@ -14,7 +14,7 @@ class TransactionSeeder extends Seeder
                 'description' => 'Part-time job payment',
                 'amount' => 8000,
                 'date' => '2024-09-01',
-                'user_id' => 3,
+                'user_id' => 2,
                 'transaction' => 'income'
             ],
             [
@@ -22,7 +22,7 @@ class TransactionSeeder extends Seeder
                 'description' => 'Lunch at the cafeteria',
                 'amount' => 300,
                 'date' => '2024-09-02',
-                'user_id' => 3,
+                'user_id' => 2,
                 'transaction' => 'expense'
             ],
             [
@@ -46,7 +46,7 @@ class TransactionSeeder extends Seeder
                 'description' => 'Groceries for the week',
                 'amount' => 1200,
                 'date' => '2024-09-05',
-                'user_id' => 3,
+                'user_id' => 2,
                 'transaction' => 'expense'
             ],
             [
@@ -54,7 +54,7 @@ class TransactionSeeder extends Seeder
                 'description' => 'Taxi to friend’s house',
                 'amount' => 700,
                 'date' => '2024-09-06',
-                'user_id' => 3,
+                'user_id' => 2,
                 'transaction' => 'expense'
             ],
             [
@@ -62,7 +62,7 @@ class TransactionSeeder extends Seeder
                 'description' => 'Freelance gig payment',
                 'amount' => 3500,
                 'date' => '2024-09-07',
-                'user_id' => 3,
+                'user_id' => 2,
                 'transaction' => 'income'
             ],
             [

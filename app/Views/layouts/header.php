@@ -8,7 +8,7 @@
     <meta name="Description" content="CodeIgniter 4 CRUD tutorial" />
     <meta name="author" content="Anand Raj @ BePractical" />
     <meta name="og:url" content="https://www.linkedin.com/in/anand346" />
-    <title>CodeIgniter CRUD Template - BePractical</title>
+    <title>Expenses Tracker</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -17,8 +17,32 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="<?= base_url('public/assets/css/style.css') ?>">
     <script src="<?= base_url('public/assets/js/main.js') ?>"></script>
+    <style>
+        #expenseIncomeChart {
+            max-width: 500px;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+        }
+
+        #expensesByDateChart {
+            max-width: 400px;
+            max-height: 300px;
+            width: 100%;
+            height: auto;
+        }
+
+        #incomeByDateChart {
+            max-width: 400px;
+            max-height: 300px;
+            width: 100%;
+            height: auto;
+        }
+
+    </style>
 </head>
 
 <body>
