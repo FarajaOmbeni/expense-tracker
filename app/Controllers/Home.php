@@ -14,6 +14,12 @@ class Home extends BaseController
     {
         $session = session();
         $userId = $session->get('user')['id'] ?? null;
+        $userModel = new UserModel();
+        $userDetails = $userModel->find($userId);
+
+        $userDetailsArray = $userDetails->toArray();
+        $adminId = $userDetailsArray['id'];
+        $username = $userDetailsArray['username'];
 
         if (!$userId) {
             return redirect()->to('/login')->with('error', 'Please log in to track expenses.');
@@ -23,16 +29,18 @@ class Home extends BaseController
 
         try {
             $totalIncome = $transactionModel->selectSum('amount')->where(['user_id' => $userId, 'transaction' => 'income'])->get()->getRow()->amount ?? 0;
-            $totalExpenses = $transactionModel->selectSum('amount')->where(['user_id'=> $userId, 'transaction' => 'expense'])->get()->getRow()->amount ?? 0;
+            $totalExpenses = $transactionModel->selectSum('amount')->where(['user_id' => $userId, 'transaction' => 'expense'])->get()->getRow()->amount ?? 0;
 
 
             $balance = $totalIncome - $totalExpenses;
             $transactions = $transactionModel->where('user_id', $userId)->orderBy('date', 'desc')->findAll();
-            
+
             $this->data['balance'] = number_format($balance);
             $this->data['totalIncome'] = number_format($totalIncome);
             $this->data['totalExpenses'] = number_format($totalExpenses);
             $this->data['transactions'] = $transactions;
+            $this->data['username'] = $username;
+
         } catch (\Exception $e) {
             log_message('error', 'Error calculating balance: ' . $e->getMessage());
             $this->data['error'] = 'An error occurred while calculating your balance. Please try again later.';

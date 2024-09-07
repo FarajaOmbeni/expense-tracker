@@ -1,5 +1,5 @@
 <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-    <h3>Welcome to the expenses Tracker</h3>
+    <h3>Welcome to the expenses Tracker, <?= $username ?></h3>
     <h4>Balance: </h4>
     <h2>KES <?= $balance ?></h2>
     <div class="d-flex flex-row justify-content-between mb-4" style="gap: 20px;">
