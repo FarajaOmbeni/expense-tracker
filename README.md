@@ -5,16 +5,16 @@
 ### Step 1: Clone the Repository
 Clone the repository using the following command:
 ```bash
-https://github.com/FarajaOmbeni/expense-tracker.git
+git clone https://github.com/FarajaOmbeni/expense-tracker.git
 ```
 
-### Step 2: Enter the expenses-tracker directory
+### Step 2: Enter the expense-tracker directory
 ```bash
-cd expenses-tracker
+cd expense-tracker
 ```
-### Step 3: Update composer
+### Step 3: Install composer
 ```bash
-composer update
+composer install
 ```
 
 ### Step 4: Copy the env file to your folder
@@ -22,9 +22,9 @@ composer update
 cp env .env
 ```
 
-#### NOTE: Turn on your local server (i.e. XAMPP) on Windows
+### Step 5: Turn on your local server (i.e. XAMPP) on Windows
 
-### Step 4: Modify the settings in your .env like this
+### Step 6: Modify the settings in your .env like this
 ```bash
 database.default.hostname = localhost
 database.default.database = expense_tracker
@@ -35,12 +35,17 @@ database.default.DBPrefix = st_
 database.default.port = 3306
 ```
 
-### Step 5: Set up your project by running:
+### Step 7: Install codeigniter shield
+```bash
+composer require simpletine/hmvc-shield
+```
+
+### Step 8: Set up your project by running:
 ```bash
 php spark simpletine:setup
 ```
 
-### Step 6: Create a database called expenses_tracker and agree to everuthing
+### Step 9: Create a database called expenses_tracker and agree to everything
 
 ### Step 7: Migrate the database
 ```bash
