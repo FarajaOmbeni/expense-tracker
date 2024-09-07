@@ -103,18 +103,90 @@ class Home extends BaseController
 
         return redirect()->to('/')->with('success', 'Income added successfully.');
     }
+    public function edit_transaction($id)
+    {
+        $transactionModel = new Transaction();
+        $expenseModel = new Expenses();
+        $incomeModel = new Income();
+
+        $transaction = $transactionModel->find($id);
+        $expense = $expenseModel->find($id);
+        $income = $incomeModel->find($id);
+
+        if (!$transaction && !$expense && !$income) {
+            return redirect()->to('/')->with('error', 'Transaction not found.');
+        }
+
+        $data = [
+            'description' => $this->request->getVar('description'),
+            'amount' => $this->request->getVar('amount'),
+            'date' => $this->request->getVar('date'),
+        ];
+
+        $success = true;
+
+        // Update transaction table
+        if ($transaction) {
+            $data['type'] = $this->request->getVar('type');
+            if (!$transactionModel->update($id, $data)) {
+                $success = false;
+            }
+        }
+
+        // Update expense table
+        if ($expense) {
+            $expenseData = $data;
+            $expenseData['type'] = $this->request->getVar('type');
+            if (!$expenseModel->update($id, $expenseData)) {
+                $success = false;
+            }
+        }
+
+        // Update income table
+        if ($income) {
+            $incomeData = $data;
+            $incomeData['type'] = $this->request->getVar('incomeType') ?? $this->request->getVar('type');
+            if (!$incomeModel->update($id, $incomeData)) {
+                $success = false;
+            }
+        }
+
+        if (!$success) {
+            return redirect()->to('/')->with('error', 'Failed to update transaction in all tables.');
+        }
+
+        return redirect()->to('/')->with('success', 'Transaction updated successfully.');
+    }
     public function delete_transaction($id)
     {
         $transactionModel = new Transaction();
         $expenseModel = new Expenses();
         $incomeModel = new Income();
 
-        if (!$transactionModel->find($id) && $expenseModel->find($id) && $incomeModel->find($$id)) {
-            return redirect()->to('/')->with('errors', 'Transaction not found.');
+        $transaction = $transactionModel->find($id);
+        $expense = $expenseModel->find($id);
+        $income = $incomeModel->find($id);
+
+        if (!$transaction && !$expense && !$income) {
+            return redirect()->to('/')->with('error', 'Transaction not found.');
         }
 
-        if (!$transactionModel->delete($id) && !$expenseModel->delete($id) || !$incomeModel->delete($id)) {
-            return redirect()->to('/')->with('errors', 'Failed to delete transaction.');
+        $success = true;
+
+        if ($transaction && !$transactionModel->delete($id)) {
+            $success = false;
+        }
+
+        if ($expense && !$expenseModel->delete($id)) {
+            $success = false;
+        }
+
+        if ($income && !$incomeModel->delete($id)) {
+            $success = false;
+        }
+
+        if (!$success) {
+            return redirect()->to('/')->with('error', 'Failed to delete transaction from all tables.');
         }
 
         return redirect()->to('/')->with('success', 'Transaction deleted successfully.');

@@ -40,7 +40,7 @@
                             <label for="expenseType">Type</label>
                             <select class="form-control" id="expenseType" name="expenseType" required>
                                 <option value="Food">Food</option>
-                                <option value="Transportation">Transportation</option>
+                                <option value="Transport">Transport</option>
                                 <option value="Health">Health</option>
                                 <option value="Leisure">Leisure</option>
                                 <option value="Entertainment">Entertainment</option>
@@ -151,13 +151,25 @@
                                                         <?php csrf_token() ?>
                                                         <div class="form-group">
                                                             <label for="editType">Type</label>
-                                                            <select class="form-control" id="editType" name="type" required>
-                                                                <option value="Salary" <?= $transaction['type'] == 'Salary' ? 'selected' : '' ?>>Salary</option>
-                                                                <option value="Pocket Money" <?= $transaction['type'] == 'Pocket Money' ? 'selected' : '' ?>>Pocket Money</option>
-                                                                <option value="Gift" <?= $transaction['type'] == 'Gift' ? 'selected' : '' ?>>Gift</option>
-                                                                <option value="Business Income" <?= $transaction['type'] == 'Business Income' ? 'selected' : '' ?>>Business Income</option>
-                                                                <option value="Other" <?= $transaction['type'] == 'Other' ? 'selected' : '' ?>>Other</option>
-                                                            </select>
+                                                            <?php if ($transaction['transaction'] == 'expense'): ?>
+                                                                <select class="form-control" id="editType" name="type" required>
+                                                                    <option value="Food" <?= $transaction['type'] == 'Food' ? 'selected' : '' ?>>Food</option>
+                                                                    <option value="Transport" <?= $transaction['type'] == 'Transport' ? 'selected' : '' ?>>Transport</option>
+                                                                    <option value="Health" <?= $transaction['type'] == 'Health' ? 'selected' : '' ?>>Health</option>
+                                                                    <option value="Leisure" <?= $transaction['type'] == 'Leisure' ? 'selected' : '' ?>>Leisure</option>
+                                                                    <option value="Entertainment" <?= $transaction['type'] == 'Entertainment' ? 'selected' : '' ?>>Entertainment</option>
+                                                                    <option value="Savings" <?= $transaction['type'] == 'Savings' ? 'selected' : '' ?>>Savings</option>
+                                                                    <option value="Other" <?= $transaction['type'] == 'Other' ? 'selected' : '' ?>>Other</option>
+                                                                </select>
+                                                            <?php elseif ($transaction['transaction'] == 'income'): ?>
+                                                                <select class="form-control" id="expenseType" name="incomeType" required>
+                                                                    <option value="Salary" <?= $transaction['type'] == 'Salary' ? 'selected' : '' ?>>Salary</option>
+                                                                    <option value="Pocket Money" <?= $transaction['type'] == 'Pocket Money' ? 'selected' : '' ?>>Pocket Money</option>
+                                                                    <option value="Gift" <?= $transaction['type'] == 'Gift' ? 'selected' : '' ?>>Gift</option>
+                                                                    <option value="Business Income" <?= $transaction['type'] == 'Business Income' ? 'selected' : '' ?>>Business Income</option>
+                                                                    <option value="Other" <?= $transaction['type'] == 'Other' ? 'selected' : '' ?>>Other</option>
+                                                                </select>
+                                                            <?php endif; ?>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="editDescription">Description</label>

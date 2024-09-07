@@ -48,6 +48,11 @@ class Transactions extends Migration
                 'null' => TRUE,
                 'default' => new \CodeIgniter\Database\RawSql('CURRENT_TIMESTAMP'),
             ],
+            'deleted_at' => [
+                'type' => 'TIMESTAMP',
+                'null' => TRUE,
+                'default' => new \CodeIgniter\Database\RawSql('CURRENT_TIMESTAMP'),
+            ],
         ]);
         $this->forge->addKey('id', TRUE);
         $this->forge->createTable('transactions');
