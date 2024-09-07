@@ -1,0 +1,1 @@
+<h1>Income Index Page</h1>
