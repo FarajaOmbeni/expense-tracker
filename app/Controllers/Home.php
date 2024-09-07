@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Models\Transaction;
 use App\Modules\Income\Models\Income;
 use CodeIgniter\Shield\Models\UserModel;
-use App\Modules\Expenses\Models\Expenses;
 
 class Home extends BaseController
 {
@@ -17,12 +16,10 @@ class Home extends BaseController
         $session = session();
         $userId = $session->get('user')['id'] ?? null;
 
-        // Redirect to login if no user is logged in
         if (!$userId) {
             return redirect()->to('/login')->with('error', 'Please log in to track expenses.');
         }
 
-        // Get user details
         $userModel = new UserModel();
         $userDetails = $userModel->find($userId);
 
@@ -77,7 +74,6 @@ class Home extends BaseController
         $transaction = 'expense';
 
         $transactionModel = new Transaction();
-        $expenseModel = new Expenses();
 
         $data = [
             'type' => $expenseType,
@@ -88,7 +84,7 @@ class Home extends BaseController
             'transaction' => $transaction
         ];
 
-        if (!$expenseModel->save($data) || !$transactionModel->save($data)) {
+        if (!$transactionModel->save($data)) {
             return redirect()->to('/')->with('errors', $transactionModel->errors());
         }
 
@@ -105,7 +101,6 @@ class Home extends BaseController
         $transaction = 'income';
 
         $transactionModel = new Transaction();
-        $incomeModel = new Income();
 
         $data = [
             'type' => $incomeType,
@@ -116,8 +111,8 @@ class Home extends BaseController
             'transaction' => $transaction,
         ];
 
-        if (!$transactionModel->save($data) || !$incomeModel->save($data)) {
-            return redirect()->to('/')->with('errors', $incomeModel->errors());
+        if (!$transactionModel->save($data)) {
+            return redirect()->to('/')->with('errors', $transactionModel->errors());
         }
 
         return redirect()->to('/')->with('success', 'Income added successfully.');
@@ -125,12 +120,6 @@ class Home extends BaseController
     public function delete_transaction($id)
     {
         $transactionModel = new Transaction();
-        $expenseModel = new Expenses();
-        $incomeModel = new Income();
-
-        if (!$transactionModel->find($id) && $expenseModel->find($id) && $incomeModel->find($$id)) {
-            return redirect()->to('/')->with('errors', 'Transaction not found.');
-        }
 
         if (!$transactionModel->delete($id)) {
             return redirect()->to('/')->with('errors', $transactionModel->errors());

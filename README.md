@@ -47,14 +47,9 @@ php spark simpletine:setup
 
 ### Step 9: Create a database called expenses_tracker and agree to everything
 
-### Step 7: Migrate the database
-```bash
-php spark:migrate
-```
-
 ### Step 8: Seed the database
 ```bash
-php spark seed DatabaseSeeder
+php spark db:seed DatabaseSeeder
 ```
 ### Step 9: These are the admin's credentials
 ```bash
