@@ -231,44 +231,52 @@
         </div>
     <?php endif; ?>
     </div>
-</div>
+    <div>
+        <h1>Report</h1>
+        <h2>Balance: <?= $balance ?></h2>
+        <h3>Total Income: <?= $totalIncome ?></h3>
+        <h3>Total Expenses: <?= $totalExpenses ?></h3>
+    </div>
+    <canvas id="incomeExpenseChart" width="400" height="200"></canvas>
 
-<div>
-    <h2>Balance: <?= $balance ?></h2>
-    <h3>Total Income: <?= $totalIncome ?></h3>
-    <h3>Total Expenses: <?= $totalExpenses ?></h3>
+
 </div>
-<canvas id="expenseIncomeChart"></canvas>
 
 <script>
-    const ctx = document.getElementById('expenseIncomeChart').getContext('2d');
-    const expenseIncomeChart = new Chart(ctx, {
+    const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+    const incomeExpenseChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Income', 'Expenses'],
             datasets: [{
-                label: 'Income vs Expenses',
-                data: [<?= $totalIncome  ?>, <?= $totalExpenses ?>, ],
+                label: 'Income vs Expenses', // This label will show up in the legend
+                data: [<?= $totalIncomeRaw ?>, <?= $totalExpensesRaw ?>],
                 backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)'
+                    'rgba(75, 192, 192, 0.2)', // Color for Income
+                    'rgba(255, 99, 132, 0.2)' // Color for Expenses
                 ],
                 borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)'
+                    'rgba(75, 192, 192, 1)', // Border for Income
+                    'rgba(255, 99, 132, 1)' // Border for Expenses
                 ],
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
             plugins: {
                 legend: {
-                    display: false,
-                },
-                title: {
-                    display: true,
-                    text: 'Income vs Expenses'
+                    display: true, // Display the legend
+                    labels: {
+                        color: 'rgb(0, 0, 0)', // Color of the legend text
+                        font: {
+                            size: 14 // Font size of the legend
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
         }

@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="<?= base_url('public/assets/css/style.css') ?>">
     <script src="<?= base_url('public/assets/js/main.js') ?>"></script>
     <style>
-        #expenseIncomeChart {
+        #incomeExpenseChart {
             max-width: 500px;
             max-height: 400px;
             width: 100%;
@@ -41,7 +41,6 @@
             width: 100%;
             height: auto;
         }
-
     </style>
 </head>
 

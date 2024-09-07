@@ -52,6 +52,8 @@ class Home extends BaseController
             $this->data['transactions'] = $transactions;
             $this->data['adminId'] = $adminId;
             $this->data['username'] = $name;
+            $this->data['totalIncomeRaw'] = $totalIncome;
+            $this->data['totalExpensesRaw'] = $totalExpenses;
         } catch (\Exception $e) {
             log_message('error', 'Error calculating balance: ' . $e->getMessage());
             $this->data['error'] = 'An error occurred while calculating your balance. Please try again later.';
