@@ -31,8 +31,8 @@ class Home extends BaseController
 
 
             $balance = $totalIncome - $totalExpenses;
-            $transactions = $transactionModel->where('user_id', $userId)->findAll();
-
+            $transactions = $transactionModel->where('user_id', $userId)->orderBy('date', 'desc')->findAll();
+            
             $this->data['balance'] = number_format($balance);
             $this->data['totalIncome'] = number_format($totalIncome);
             $this->data['totalExpenses'] = number_format($totalExpenses);
@@ -55,6 +55,7 @@ class Home extends BaseController
         $expenseAmount = $this->request->getVar('expenseAmount');
         $expenseDate = $this->request->getVar('expenseDate');
         $userId = session()->get('user')['id'];
+        $transaction = 'expense';
 
         $transactionModel = new Transaction();
         $expenseModel = new Expenses();
@@ -64,7 +65,8 @@ class Home extends BaseController
             'description' => $expenseDescription,
             'amount' => $expenseAmount,
             'date' => $expenseDate,
-            'user_id' => $userId
+            'user_id' => $userId,
+            'transaction' => $transaction
         ];
 
         if (!$expenseModel->save($data) || !$transactionModel->save($data)) {
@@ -76,12 +78,12 @@ class Home extends BaseController
 
     public function add_income()
     {
-        // Fetch the current user's data
         $incomeType = $this->request->getVar('incomeType');
         $incomeDescription = $this->request->getVar('incomeDescription');
         $incomeAmount = $this->request->getVar('incomeAmount');
         $incomeDate = $this->request->getVar('incomeDate');
         $userId = session()->get('user')['id'];
+        $transaction = 'income';
 
         $transactionModel = new Transaction();
         $incomeModel = new Income();
@@ -91,7 +93,8 @@ class Home extends BaseController
             'description' => $incomeDescription,
             'amount' => $incomeAmount,
             'date' => $incomeDate,
-            'user_id' => $userId
+            'user_id' => $userId,
+            'transaction' => $transaction,
         ];
 
         if (!$transactionModel->save($data) || !$incomeModel->save($data)) {
@@ -99,5 +102,21 @@ class Home extends BaseController
         }
 
         return redirect()->to('/')->with('success', 'Income added successfully.');
+    }
+    public function delete_transaction($id)
+    {
+        $transactionModel = new Transaction();
+        $expenseModel = new Expenses();
+        $incomeModel = new Income();
+
+        if (!$transactionModel->find($id) && $expenseModel->find($id) && $incomeModel->find($$id)) {
+            return redirect()->to('/')->with('errors', 'Transaction not found.');
+        }
+
+        if (!$transactionModel->delete($id) && !$expenseModel->delete($id) || !$incomeModel->delete($id)) {
+            return redirect()->to('/')->with('errors', 'Failed to delete transaction.');
+        }
+
+        return redirect()->to('/')->with('success', 'Transaction deleted successfully.');
     }
 }

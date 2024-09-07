@@ -12,7 +12,7 @@ class Transaction extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['type', 'description', 'amount', 'date', 'user_id'];
+    protected $allowedFields    = ['type', 'description', 'amount', 'date', 'user_id', 'transaction'];
 
 
     protected bool $allowEmptyInserts = false;

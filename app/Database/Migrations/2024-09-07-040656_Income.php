@@ -34,6 +34,10 @@ class Income extends Migration
                 'constraint' => 11,
                 'unsigned' => TRUE,
             ],
+            'transaction' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+            ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
                 'null' => TRUE,

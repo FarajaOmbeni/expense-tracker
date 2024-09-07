@@ -9,6 +9,6 @@ class Expenses extends Model
     protected $table            = 'st_expenses';
     protected $useTimestamps    = true;
     protected $useSoftDeletes   = true;
-    protected $allowedFields    = ['type', 'description', 'amount', 'date', 'user_id'];
+    protected $allowedFields    = ['type', 'description', 'amount', 'date', 'user_id', 'transaction'];
 
 }

@@ -35,6 +35,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="/add-expense">
+                        <?= csrf_field() ?>
                         <div class="form-group">
                             <label for="expenseType">Type</label>
                             <select class="form-control" id="expenseType" name="expenseType" required>
@@ -80,6 +81,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" action="/add-income">
+                        <?= csrf_field() ?>
                         <div class="form-group">
                             <label for="expenseType">Type</label>
                             <select class="form-control" id="expenseType" name="incomeType" required>
@@ -111,40 +113,110 @@
             </div>
         </div>
     </div>
+
     <h4>Transactions</h4>
     <div class="w-50">
         <table class="table table-striped">
-            <?php if(!empty($transactions)): ?>
-            <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Amount</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($transactions as $transaction): ?>
-                <tr>
-                    <td><?= $transaction['date'] ?></td>
-                    <td><?= $transaction['type'] ?></td>
-                    <td><?= $transaction['description'] ?></td>
-                    <td><?= $transaction['amount'] ?></td>
-                    <td>
-                        <div class="d-flex mb-4" style="gap: 5px">
-                            <form action=" /edit/{id}"><button type="submit" class="btn btn-primary">Edit</button></form>
-                            <form action="/delete/{id}"><button type="submit" class="btn btn-danger">Delete</button></form>
-                        </div>
-                    </td>
-                </tr>
-                <?php endforeach ?>
-            </tbody>
+            <?php if (!empty($transactions)): ?>
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($transactions as $transaction): ?>
+                        <tr style="color: white; background-color: <?= $transaction['transaction'] == 'expense' ? '#C82333' : '#218838' ?>;">
+                            <td><?= $transaction['date'] ?></td>
+                            <td><?= $transaction['type'] ?></td>
+                            <td><?= $transaction['description'] ?></td>
+                            <td><?= $transaction['amount'] ?></td>
+                            <td>
+                                <div class="d-flex mb-4" style="gap: 5px">
+                                    <!-- Edit Modal -->
+                                    <div style="color:black;" class="modal fade" id="editModal<?= $transaction['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editModalLabel">Edit Transaction</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="post" action="/edit-transaction/<?= $transaction['id'] ?>">
+                                                        <?php csrf_token() ?>
+                                                        <div class="form-group">
+                                                            <label for="editType">Type</label>
+                                                            <select class="form-control" id="editType" name="type" required>
+                                                                <option value="Salary" <?= $transaction['type'] == 'Salary' ? 'selected' : '' ?>>Salary</option>
+                                                                <option value="Pocket Money" <?= $transaction['type'] == 'Pocket Money' ? 'selected' : '' ?>>Pocket Money</option>
+                                                                <option value="Gift" <?= $transaction['type'] == 'Gift' ? 'selected' : '' ?>>Gift</option>
+                                                                <option value="Business Income" <?= $transaction['type'] == 'Business Income' ? 'selected' : '' ?>>Business Income</option>
+                                                                <option value="Other" <?= $transaction['type'] == 'Other' ? 'selected' : '' ?>>Other</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="editDescription">Description</label>
+                                                            <input value="<?= $transaction['description'] ?>" class="form-control" type="text" id="editDescription" name="description" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="editAmount">Amount</label>
+                                                            <input value="<?= $transaction['amount'] ?>" type="number" class="form-control" id="editAmount" name="amount" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="editDate">Date</label>
+                                                            <input value="<?= $transaction['date'] ?>" type="date" class="form-control" id="editDate" name="date" required>
+                                                        </div>
+                                                        <input type="hidden" id="editTransactionId" name="transactionId" required>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal<?= $transaction['id'] ?>">Edit</button>
+
+                                    <!-- Delete Modal -->
+                                    <div style="color: black;" class="modal fade" id="deleteModal<?= $transaction['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel">Delete Transaction</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to delete this transaction?</p>
+                                                    <form method="post" action="/delete-transaction/<?= $transaction['id'] ?>">
+                                                        <?= csrf_field() ?>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?= $transaction['id'] ?>">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
         </table>
-        <?php else: ?>
-            <div class="alert alert-primary">
-                <p style="text-align: center;">No Transactions Found</p>
-            </div>
-        <?php endif; ?>
+    <?php else: ?>
+        <div class="alert alert-primary">
+            <p style="text-align: center;">No Transactions Found</p>
+        </div>
+    <?php endif; ?>
     </div>
 </div>
