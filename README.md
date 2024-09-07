@@ -22,6 +22,8 @@ composer update
 cp env .env
 ```
 
+#### NOTE: Turn on your local server (i.e. XAMPP) on Windows
+
 ### Step 4: Modify the settings in your .env like this
 ```bash
 database.default.hostname = localhost
