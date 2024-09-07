@@ -3,9 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Transaction;
-use App\Modules\Income\Models\Income;
 use CodeIgniter\Shield\Models\UserModel;
-use App\Modules\Expenses\Models\Expenses;
 
 class Home extends BaseController
 {
@@ -21,13 +19,11 @@ class Home extends BaseController
             return redirect()->to('/login')->with('error', 'Please log in to track expenses.');
         }
 
-        $incomeModel = new Income();
-        $expenseModel = new Expenses();
         $transactionModel = new Transaction();
 
         try {
-            $totalIncome = $incomeModel->selectSum('amount')->where('user_id', $userId)->get()->getRow()->amount ?? 0;
-            $totalExpenses = $expenseModel->selectSum('amount')->where('user_id', $userId)->get()->getRow()->amount ?? 0;
+            $totalIncome = $transactionModel->selectSum('amount')->where(['user_id' => $userId, 'transaction' => 'income'])->get()->getRow()->amount ?? 0;
+            $totalExpenses = $transactionModel->selectSum('amount')->where(['user_id'=> $userId, 'transaction' => 'expense'])->get()->getRow()->amount ?? 0;
 
 
             $balance = $totalIncome - $totalExpenses;
@@ -58,7 +54,6 @@ class Home extends BaseController
         $transaction = 'expense';
 
         $transactionModel = new Transaction();
-        $expenseModel = new Expenses();
 
         $data = [
             'type' => $expenseType,
@@ -69,7 +64,7 @@ class Home extends BaseController
             'transaction' => $transaction
         ];
 
-        if (!$expenseModel->save($data) || !$transactionModel->save($data)) {
+        if (!$transactionModel->save($data)) {
             return redirect()->to('/')->with('errors', $transactionModel->errors());
         }
 
@@ -86,7 +81,6 @@ class Home extends BaseController
         $transaction = 'income';
 
         $transactionModel = new Transaction();
-        $incomeModel = new Income();
 
         $data = [
             'type' => $incomeType,
@@ -97,7 +91,7 @@ class Home extends BaseController
             'transaction' => $transaction,
         ];
 
-        if (!$transactionModel->save($data) || !$incomeModel->save($data)) {
+        if (!$transactionModel->save($data)) {
             return redirect()->to('/')->with('errors', $incomeModel->errors());
         }
 
@@ -106,53 +100,15 @@ class Home extends BaseController
     public function edit_transaction($id)
     {
         $transactionModel = new Transaction();
-        $expenseModel = new Expenses();
-        $incomeModel = new Income();
-
-        $transaction = $transactionModel->find($id);
-        $expense = $expenseModel->find($id);
-        $income = $incomeModel->find($id);
-
-        if (!$transaction && !$expense && !$income) {
-            return redirect()->to('/')->with('error', 'Transaction not found.');
-        }
-
         $data = [
+            'type' => $this->request->getVar('type'),
             'description' => $this->request->getVar('description'),
             'amount' => $this->request->getVar('amount'),
             'date' => $this->request->getVar('date'),
         ];
 
-        $success = true;
-
-        // Update transaction table
-        if ($transaction) {
-            $data['type'] = $this->request->getVar('type');
-            if (!$transactionModel->update($id, $data)) {
-                $success = false;
-            }
-        }
-
-        // Update expense table
-        if ($expense) {
-            $expenseData = $data;
-            $expenseData['type'] = $this->request->getVar('type');
-            if (!$expenseModel->update($id, $expenseData)) {
-                $success = false;
-            }
-        }
-
-        // Update income table
-        if ($income) {
-            $incomeData = $data;
-            $incomeData['type'] = $this->request->getVar('incomeType') ?? $this->request->getVar('type');
-            if (!$incomeModel->update($id, $incomeData)) {
-                $success = false;
-            }
-        }
-
-        if (!$success) {
-            return redirect()->to('/')->with('error', 'Failed to update transaction in all tables.');
+        if (!$transactionModel->update($id, $data)) {
+            return redirect()->to('/')->with('errors', $transactionModel->errors());
         }
 
         return redirect()->to('/')->with('success', 'Transaction updated successfully.');
@@ -160,33 +116,19 @@ class Home extends BaseController
     public function delete_transaction($id)
     {
         $transactionModel = new Transaction();
-        $expenseModel = new Expenses();
-        $incomeModel = new Income();
 
-        $transaction = $transactionModel->find($id);
-        $expense = $expenseModel->find($id);
-        $income = $incomeModel->find($id);
+        // Check if the transaction exists in any of the tables
+        $transactionExists = $transactionModel->find($id);
 
-        if (!$transaction && !$expense && !$income) {
+        if (!$transactionExists) {
             return redirect()->to('/')->with('error', 'Transaction not found.');
         }
 
-        $success = true;
+        // Attempt to delete from all tables
+        $deleteTransaction = $transactionModel->delete($id);
 
-        if ($transaction && !$transactionModel->delete($id)) {
-            $success = false;
-        }
-
-        if ($expense && !$expenseModel->delete($id)) {
-            $success = false;
-        }
-
-        if ($income && !$incomeModel->delete($id)) {
-            $success = false;
-        }
-
-        if (!$success) {
-            return redirect()->to('/')->with('error', 'Failed to delete transaction from all tables.');
+        if (!$deleteTransaction) {
+            return redirect()->to('/')->with('error', 'Failed to delete transaction.');
         }
 
         return redirect()->to('/')->with('success', 'Transaction deleted successfully.');
