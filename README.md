@@ -45,7 +45,7 @@ composer require simpletine/hmvc-shield
 php spark simpletine:setup
 ```
 
-### Step 9: Create a database called expenses_tracker and agree to everything
+### Step 9: Create a database called expense_tracker and agree to everything
 
 ### Step 8: Seed the database
 ```bash
